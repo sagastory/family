@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Our Family</title>
+        <script src="{{static_url("js/vue.js")}}"></script>
+        <script src="{{static_url("dist/vis.min.js")}}"></script>
+        <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+
+        <!-- 引入样式 bootstrap-datetimepicker.min -->
+        <link rel="stylesheet" href="{{static_url("css/m.css")}}">
+        <link rel="stylesheet" href="{{static_url("css/dropzone.min.css")}}">
+
+        <link href="{{static_url("css/bootstrap.min.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/bootstrap-datetimepicker.min.css")}}" rel="stylesheet">
+        <link href="{{static_url("font-awesome/css/font-awesome.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/animate.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/style.css")}}" rel="stylesheet">
+        <link href="{{static_url("dist/vis.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/plugins/toastr/toastr.min.css")}}" rel="stylesheet">
+
+        <link href='https://fonts.cat.net/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+        <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    </head>
+
+
+    <body class="gray-bg" style="padding-top:40px">
+
+        <div>
+
+
+            <div class="mcontain gray-bg">
+
+                <nav class="navbar navbar-fixed-top white-bg" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header" style="padding-top:10px">
+                        <a class="navbar-brand" href="#">
+                            <i class="fa fa-circle-o fa-lg"></i>&nbsp; Me+
+                        </a>
+
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <span class="m-r-sm text-muted welcome-message">欢迎您{{current_user}}.</span>
+                        </li>
+
+                        <li>
+                            <a class="right-sidebar-toggle visible-xs-block visible-sm-block visible-md-block">
+                                <i class="fa fa-home fa-lg"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a type="button" data-toggle="modal" data-target="#myModal">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-toggle count-info" href="#">
+                                <i class="fa fa-envelope"></i>
+                                <span class="label label-warning">16</span>
+                            </a>
+
+                        </li>
+
+
+                        <li>
+                            <a href="/logout">
+                                <i class="fa fa-sign-out"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+
+                <div id="app">
+
+
+                    <v-card-text style="position: relative">
+                      <v-btn
+                        absolute
+                        dark
+                        fab
+                        top
+                        right
+                        color="blue"
+                        transition="v-fab-transition"
+                      >
+                        <v-icon>add</v-icon>
+                      </v-btn>
+                    </v-card-text>
+        
+                    <v-bottom-nav absolute :value="e31" :active.sync="e3" color="white">
+        
+                        <v-btn flat color="teal" data-toggle="tab" href="tabs.html#tab-1">
+                            <span>家族动态</span>
+                            <v-icon>history</v-icon>
+                        </v-btn>
+                        <v-btn flat color="teal" data-toggle="tab" onclick="showrela()" href="tabs.html#tab-2">
+                            <span>家族关系</span>
+                            <v-icon>favorite</v-icon>
+                        </v-btn>
+                        <v-btn flat color="teal">
+                            <span>我的家庭</span>
+                            <v-icon>place</v-icon>
+                        </v-btn>
+                    </v-bottom-nav>
+        
+                    </v-app>
+                </div>
+
+
+                {% if len(familys)==0 %}
+                <div class="wrapper wrapper-content">
+                    <div class="middle-box text-center animated fadeInRightBig">
+                        <h3 class="font-bold">您尚未创建自己的网上家庭</h3>
+                        <div class="error-desc">
+                            您可以通过上传一张家庭合照创建自己的网上家庭.
+                            <br/>
+                            <button class="btn btn-primary m-t" data-toggle="modal" data-target="#myModal">去创建</button>
+                        </div>
+                    </div>
+                </div>
+                {%else%}
+
+                <div class="wrapper wrapper-content animated fadeInRight">
+
+                    <div class="row">
+
+                        <div class="col-lg-3 hidden-xs hidden-sm hidden-md">
+
+                            {% for family in familys %}
+                            <div class="ibox" onclick="window.location.href=('/family/{{family[0]}}')">
+                                <div class="ibox-title">
+                                    <h2 style="color:rgb(224, 151, 15)">
+                                        <i class="fa fa-lock pull-right"></i>
+                                        <i class="fa fa-home"></i>&nbsp;{{family[1]}}</h2>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <p class="small">
+                                        {{family[2]}}
+                                    </p>
+                                    <div class="user-friends">
+                                        {%for person in persons[family[0]] %}
+                                        <a href="{{'/person/'+person[0]}}">
+                                            <img alt="member" class="img-circle" src="{{static_url('pic/'+family[0]+'/'+person[1])}}">
+                                        </a>
+                                        {% end %}
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% end %}
+
+                        </div>
+
+                        <div class="col-lg-8" id="msglist">
+                            <div class="tabs-container">
+
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active">
+                                        <div class="social-feed-box" v-for="message in mesgs" v-cloak>
+
+
+                                            <div class="social-avatar">
+
+                                                <a :href="'/person/'+message[0][8]" class="pull-left">
+                                                    <img alt="image" class="img-circle" :src="'/static/pic/'+message[0][1]+'/'+message[0][6]">
+                                                </a>
+                                                <div class="media-body">
+
+                                                    <p>${message[0][5]}</p>
+
+                                                    <small class="text-muted">${message[0][4]}</small> &nbsp;于
+                                                    <a :href="'/family/'+message[0][1]" style="display:inline">${message[0][7]}</a>
+                                                </div>
+                                            </div>
+
+                                            <div class="social-body">
+                                                <p>${message[0][3]}</p>
+                                                <div class="photos">
+
+                                                    <img v-for="pic in message[1]" alt="image" class="feed-photo" :src="'/static/pic/'+message[0][1]+'/ablum/'+pic[1]">
+
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <button class="btn btn-white btn-xs">
+                                                        <i class="fa fa-thumbs-up"></i> 喜欢</button>
+
+                                                    <button class="btn btn-white btn-xs">
+                                                        <i class="fa fa-share"></i> 分享</button>
+
+                                                </div>
+                                                <div class="pull-right">
+                                                    <button class="btn-white" v-on:click="hidecomment('box'+message[0][0])">
+                                                        <i class="fa fa-comment"></i> 评论 &nbsp; ${ message[2].length }
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                            <div class="social-footer" :id="'box'+message[0][0]" style="display:none">
+
+                                                <div class="social-comment">
+
+                                                    <div class="media-body">
+                                                        <textarea class="form-control" placeholder="Write comment..." :id="message[0][0]"></textarea>
+                                                    </div>
+                                                    <span class="pull-right" style="position: relative;top:-45px;left:-10px" v-on:click="writecomment(message[0][0],message[0][1])">
+                                                        <i class="fa fa-paper-plane-o fa-2x"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div class="social-comment" v-for="comment in message[2]">
+
+                                                    <img class="img-circle" :src="'/static/pic/'+message[0][1]+'/'+comment[5]"> ${comment[4]}
+                                                    <br />
+                                                    <div class="media-body">
+                                                        <strong>${comment[2]}</strong>
+                                                        <br/>
+
+                                                        <small class="text-muted">${comment[3]}</small>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <!-- end for -->
+                                    </div>
+                                    <!--tab-1-->
+                                    <div id="tab-2" class="tab-pane">
+                                        <div id="family-rela" class="social-feed-box" style="height: 400px"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% end %}
+
+            </div>
+
+        </div>
+
+        <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <i class="fa fa-home modal-icon"></i>
+                        <h4 class="modal-title">上传一张全家福，创建一个家庭!</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="dropzone" id="addmember">
+                            <div class="am-text-success dz-message ">
+                                <i class="fa fa-plus fa-3x "></i>
+                                <br>选择相片
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal " id="myFam" tabindex="-1 " role="dialog " aria-hidden="true " data-backdrop="static ">
+            <div class="modal-dialog modal-lg ">
+                <div class="modal-content animated bounceInRight ">
+                    <div class="modal-header ">
+                        <h4 class="modal-title ">请拖动头像到相应位置</h4>
+                    </div>
+                    <div class="modal-body " id="personlist">
+                        <person-list :layer="member "></person-list>
+                    </div>
+                    <div class="modal-tail ">
+                        <ul class="team-members list-inline " id="headlist">
+                            <li v-for="img in piclist ">
+                                <image :src="img" class="img-circle " :id="img" ondragstart="dostart(event, 'true')
+                            " ondragend="event.preventDefault() "></image>
+
+                            </li>
+                            <li class="pull-right ">
+                                <button onclick="addmembernextstep() " class="btn btn-primary m-t ">下一步</button>
+                            </li>
+                        </ul>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal" id="myFam2" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <h4 class="modal-title">填写家庭基本信息</h4>
+                    </div>
+                    <form class="form-horizontal" id="memberinfo">
+                        <div class="modal-body">
+                            <div class="form-group ">
+                                <label class="col-lg-2 control-label ">为家庭命名</label>
+
+                                <div class="col-lg-10 ">
+                                    <input type="text " placeholder="吾爱吾家 " class="form-control " name="fname">
+                                    <input type="text" class="hidden" id="createfid" name="fid" value="">
+                                    <input type="text" class="hidden" id="createfphoto" name="fphoto" value="">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="col-lg-2 control-label ">家庭宣言</label>
+
+                                <div class="col-lg-10 ">
+                                    <input type="textarea" placeholder="时光恒久远，家庭永流传! " class="form-control " name="ftxt">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group ">
+                                <label class="col-lg-2 control-label ">你和TA的结婚纪念日</label>
+
+                                <div class="col-lg-10 ">
+                                    <input type="text" placeholder="时光渐渐远去，我们的记忆不老! " class="form-control datetimepicker" name="fdate">
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="form-group" v-for="(value, key) in memberlist">
+                                <span class="col-lg-2 control-label" style="padding:0px">
+                                    <img class="img-circle" :src="value[2]"></img>&nbsp;${value[1]}
+                                </span>
+                                <input type="text" class="hidden" :value="value[1]" name="relationship">
+                                <input type="text" class="hidden" :value="value[2]" name="photo">
+                                <input type="text" class="hidden" :value="value[0]" name="pid">
+
+                                <div class="col-lg-5">
+                                    <input type="textarea" placeholder="TA的名字和生日!" class="form-control" name="pname" :value="value[3]">
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control datetimepicker" placeholder="TA的生日!" name="pbirthday" :value="value[4]">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-tail">
+
+                            <button type="button" onclick="createfinish(event)" class="btn btn-primary btn-lg pull-right">完成</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="black_overlay text-center">
+            <i class="fa fa-spin fa-spinner"></i>处理中...
+        </div>
+        <div id="right-sidebar">
+            <div class="sidebar-container">
+
+                {% for family in familys %}
+                <li class="ibox" onclick="window.location.href=('/family/{{family[0]}}')">
+                    <div class="ibox-content" style="width:500px">
+                        <h2 style="color:rgb(224, 151, 15)">
+                            <i class="fa fa-lock pull-right"></i>
+                            <i class="fa fa-home"></i>&nbsp;{{family[1]}}</h2>
+                        <p class="small">
+                            {{family[2]}}
+                        </p>
+                        <div class="user-friends">
+                            {%for person in persons[family[0]] %}
+                            <a href="{{'/person/'+person[0]}}">
+                                <img alt="member" class="img-circle" src="{{static_url('pic/'+family[0]+'/'+person[1])}}">
+                            </a>
+                            {% end %}
+                        </div>
+
+                    </div>
+                </li>
+                <hr /> {% end %}
+
+            </div>
+
+
+
+        </div>
+
+        
+    </body>
+    <!-- 引入js -->
+
+    <!-- Mainly scripts bootstrap-datetimepicker.zh-CN-->
+    <script src=" {{static_url("js/jquery-2.1.1.js")}} "></script>
+    <script src=" {{static_url("js/bootstrap.js")}} "></script>
+    <script src=" {{static_url("js/bootstrap-datetimepicker.min.js")}} "></script>
+    <script src=" {{static_url("js/locales/bootstrap-datetimepicker.zh-CN.js")}} "></script>
+    <script src=" {{static_url("js/plugins/metisMenu/jquery.metisMenu.js")}} "></script>
+    <script src=" {{static_url("js/plugins/slimscroll/jquery.slimscroll.min.js")}} "></script>
+    <script src=" {{static_url("js/plugins/toastr/toastr.min.js")}} "></script>
+
+
+    <script src=" {{static_url("js/dropzone.js")}} "></script>
+    <script src=" {{static_url("js/util.js")}} "></script>
+    <script src=" {{static_url("js/com.js")}} "></script>
+    <script src=" {{static_url("js/m.js")}} "></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src=" {{static_url("js/inspinia.js")}} "></script>
+    <script src=" {{static_url("js/plugins/pace/pace.min.js")}} "></script>
+
+    <!-- Peity -->
+    <script src=" {{static_url("js/plugins/peity/jquery.peity.min.js")}} "></script>
+
+    <!-- Peity -->
+    <script src=" {{static_url("js/demo/peity-demo.js")}} "></script>
+
+    <!-- Data picker -->
+    <script src=" {{static_url("js/plugins/datapicker/bootstrap-datepicker.js")}} "></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    e3: 0,
+                    e31: true
+                }
+            }
+        })
+    </script>
+
+
+</html>

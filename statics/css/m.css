@@ -1,0 +1,61 @@
+[v-cloak] {
+  display: none;
+}
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.feed-photo {
+  max-height: 180px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.team-members {
+  margin: 10px 0;
+  padding-left: 5px;
+}
+
+.list-inline {
+  padding-left: 0;
+  margin-left: -5px;
+  list-style: none
+}
+
+.list-inline>li {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px
+}
+
+.team-members img.img-circle {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 5px;
+}
+
+.text-center {
+  text-align: center
+}
+
+.hidden {
+  display: none !important
+}
+
+.black_overlay {
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: 91001;
+  -moz-opacity: 0.5;
+  opacity: .50;
+  filter: alpha(opacity=50);
+  padding-top: 30%;
+}

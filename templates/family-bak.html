@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Our Family</title>
+
+        <!-- 引入样式 -->
+        <link rel="stylesheet" href="{{static_url("css/m.css")}}">
+        <link rel="stylesheet" href="{{static_url("css/dropzone.min.css")}}">
+
+        <link href="{{static_url("css/bootstrap.min.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/bootstrap-datetimepicker.min.css")}}" rel="stylesheet">
+        <link href="{{static_url("font-awesome/css/font-awesome.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/animate.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/style.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/plugins/toastr/toastr.min.css")}}" rel="stylesheet">
+
+
+
+
+    </head>
+
+    <body class="gray-bg" style="padding-top:50px">
+
+        <div>
+
+
+            <div class="mcontain gray-bg">
+                <nav class="navbar navbar-fixed-top white-bg" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header" style="padding-top:10px">
+                        <a class="navbar-brand" href="/">
+                            <i class="fa fa-reply fa-lg"></i>&nbsp; Me+</a>
+                        </a>
+
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right"  id="tabmenu">
+                        <li>
+                            <span class="m-r-sm text-muted welcome-message">欢迎您{{current_user}}.</span>
+                        </li>
+                        
+                        
+                        <li>
+                            <a type="button" data-toggle="modal" data-target="#myModal">
+                                <i class="fa fa-plus fa-lg"></i></a>
+                        </li>
+                        <li>
+                            <a type="button" data-toggle="modal" data-target="#writeMesg">
+                                <i class="fa fa-pencil-square-o fa-lg"></i></a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-toggle count-info" href="#">
+                                <i class="fa fa-envelope"></i>
+                                <span class="label label-warning">16</span>
+                            </a>
+
+                        </li>
+
+
+                        <li>
+                            <a href="/logout">
+                                <i class="fa fa-sign-out"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                
+
+                <div class="wrapper wrapper-content">
+
+
+                    <div class="row animated fadeInRight">
+                        <div class="col-md-4">
+                            <div class="ibox float-e-margins">
+
+                                <div class="hidden-xs hidden-sm hidden-md">
+                                    <div class="ibox-content no-padding border-left-right">
+                                        <img alt="image" class="img-responsive" src="{{static_url('pic/'+family[0]+'/ablum/'+family[4])}}">
+                                    </div>
+                                </div>
+                                <div class="ibox-title">
+
+                                    <h2>
+                                        <i class="fa fa-home fa-1x" style="color:rgb(241, 131, 52)"></i>&nbsp;{{family[1]}}
+                                        <span class="user-friends pull-right">
+                                            <a v-for="person in plist" :href="'/person/'+person[0]">
+                                                <img :alt="person[1]" class="img-circle" :src="person[2]">
+                                            </a>
+                                        </span>
+                                    </h2>
+
+                                    <h2>{{family[2]}}</h2>
+                                    <br />
+                                    <small class="text-mute">成员完整度:</small>
+                                    <div class="stat-percent">{{family[5]}}%</div>
+                                    <div class="progress progress-mini">
+                                        <div style="{{'width: '+str(family[5])+'%;'}}" class="progress-bar"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-8" id="myfamily">
+                            <div class="tabs-container">
+                                <!-- -->
+                                <ul class="nav nav-tabs">
+                                        <li class="active">
+                                                <a data-toggle="tab" v-on:click="init" href="tabs.html#tab-1">动态
+                                                    <span class="sr-only">(current)</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" v-on:click="getevents" href="tabs.html#tab-2">大事</a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" v-on:click="getpics" href="tabs.html#tab-3">照片</a>
+                                            </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active">
+
+
+                                        <div class="social-feed-box" v-for="message in mesgs" v-cloak>
+
+
+                                            <div class="social-avatar">
+
+                                                <a :href="'/person/'+message[0][7]" class="pull-left">
+                                                    <img alt="image" class="img-circle" :src="'/static/pic/'+message[0][1]+'/'+message[0][6]">
+                                                </a>
+
+                                                <div class="media-body">
+
+                                                    <p>${message[0][5]}</p>
+
+                                                    <small class="text-muted">${message[0][4]}</small>
+                                                </div>
+                                            </div>
+                                            <div class="social-body">
+                                                <p>${message[0][3]}</p>
+                                                <div class="photos">
+
+                                                    <img v-for="pic in message[1]" alt="image" class="feed-photo" :src="'/static/pic/'+message[0][1]+'/ablum/'+pic[1]">
+
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <button class="btn btn-white btn-xs">
+                                                        <i class="fa fa-thumbs-up"></i> 喜欢</button>
+
+                                                    <button class="btn btn-white btn-xs">
+                                                        <i class="fa fa-share"></i> 分享</button>
+
+                                                </div>
+                                                <div class="pull-right">
+                                                    <button class="btn-white" v-on:click="hidecomment('box'+message[0][0])">
+                                                        <i class="fa fa-comment"></i> 评论 &nbsp; ${ message[2].length }
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                            <div class="social-footer" :id="'box'+message[0][0]" style="display:none">
+
+                                                <div class="social-comment">
+
+                                                    <div class="media-body">
+                                                        <textarea class="form-control" placeholder="Write comment..." :id="message[0][0]"></textarea>
+                                                    </div>
+                                                    <span class="pull-right" style="position: relative;top:-45px;left:-10px" v-on:click="writecomment(message[0][0],message[0][1])">
+                                                        <i class="fa fa-paper-plane-o fa-2x"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div class="social-comment" v-for="comment in message[2]">
+
+                                                    <img class="img-circle" :src="'/static/pic/'+message[0][1]+'/'+comment[5]"> ${comment[4]}
+                                                    <br />
+                                                    <div class="media-body">
+                                                        <strong>${comment[2]}</strong>
+                                                        <br/>
+
+                                                        <small class="text-muted">${comment[3]}</small>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <!--tab-1 -->
+
+                                    <div id="tab-2" class="tab-pane">
+                                        <div class="panel-body">
+                                            <div id="vertical-timeline" class="vertical-container light-timeline left-orientation">
+
+                                                <div class="vertical-timeline-block" v-for="event in events" v-cloak>
+                                                    <div class="vertical-timeline-icon navy-bg">
+                                                        <i class="fa fa-briefcase"></i>
+                                                    </div>
+
+                                                    <div class="vertical-timeline-content">
+                                                        <h2>起始</h2>
+                                                        <p>${event[0][4]+event[0][1]}</p>
+                                                        <div class="photos">
+
+                                                            <img v-for="pic in event[1]" alt="image" class="feed-photo" :src="'/static/pic/'+event[0][6]+'/ablum/'+pic[0]">
+
+                                                        </div>
+                                                        <span class="vertical-date">
+
+                                                            <br/>
+                                                            <small>${event[0][2]}</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--tab-2 -->
+
+                                    <div id="tab-3" class="tab-pane">
+
+                                        <div class="panel-body grid">
+                                            <div class="grid-item" v-for="pic in ablums">
+                                                <img :src="'/static/pic/'+pic[1]+'/ablum/'+pic[2]">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--tab-3 -->
+
+                                </div>
+                            </div>
+                            <!--tabs container -->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <i class="fa fa-laptop modal-icon"></i>
+                        <h4 class="modal-title">上传一张照片，添加家庭成员!</h4>
+
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="dropzone" id="addmember">
+                            <div class="am-text-success dz-message">
+                                <i class="fa fa-plus fa-3x"></i>
+                                <br>选择相片
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal" id="myFam" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+
+                        <h4 class="modal-title">请拖动头像到相应位置</h4>
+
+                    </div>
+                    <div class="modal-body" id="personlist">
+                        <person-list :layer="member"></person-list>
+                    </div>
+                    <div class="modal-tail">
+                        <ul class="team-members list-inline" id="headlist">
+                            <li v-for="img in piclist">
+                                <image :src="img" class="img-circle" :id="img" ondragstart="dostart(event,'true')" ondragend="event.preventDefault()"></image>
+                            </li>
+                            <li class="pull-right">
+                                <button type="button" onclick="addmembernextstep()" class="btn btn-primary m-t">下一步</button>
+                            </li>
+                        </ul>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal" id="myFam2" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <h4 class="modal-title">填写成员基本信息</h4>
+                    </div>
+                    <form class="form-horizontal" id="memberinfo">
+                        <div class="modal-body">
+                            <input type="text" class="hidden" value="{{family[0]}}" name="fid">
+                            <div class="form-group" v-for="(value, key) in memberlist">
+                                <span class="col-lg-2 control-label" style="padding:0px">
+                                    <img class="img-circle" :src="value[2]"></img>&nbsp;${value[1]}
+                                </span>
+                                <input type="text" class="hidden" :value="value[1]" name="relationship">
+                                <input type="text" class="hidden" :value="value[2]" name="photo">
+                                <input type="text" class="hidden" :value="value[0]" name="pid">
+
+                                <div class="col-lg-5">
+                                    <input type="textarea" placeholder="TA的名字和生日!" class="form-control" name="pname" :value="value[3]">
+                                </div>
+
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control datetimepicker" placeholder="TA的生日!" name="pbirthday" :value="value[4]=='0000-00-00'?'':value[4]">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-tail">
+
+                            <button type="button" onclick="addmemberfinish(event)" class="btn btn-primary btn-lg pull-right">完成</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal" id="writeMesg" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <span>发布动态</span>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <input id="familyid" value="{{family[0]}}" class="hidden">
+
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="form-control" placeholder="写点什么呢?" id="textarea"></textarea>
+
+                        <span class="pull-right" style="position: relative;top:-45px;left:-10px" onclick="doupload()">
+                            <i class="fa fa-paper-plane-o fa-2x"></i>
+                        </span>
+                        <br />
+                        <div class="dropzone" id="myDropzone">
+                            <div class="dropzone-previews" id="preview"></div>
+
+
+                            <div class="am-text-success dz-message">
+                                <p class="text-warning" id="wmsg"></p>
+                                <i class="fa fa-plus fa-3x"></i>
+                                <br>添加相片(最多添加6张)
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="black_overlay text-center">
+            <i class="fa fa-spin fa-spinner"></i>处理中...
+        </div>
+
+
+    </body>
+    <!-- 引入js -->
+
+
+    <!-- Mainly scripts -->
+    <script src="{{static_url("js/jquery-2.1.1.js")}}"></script>
+    <script src="{{static_url("js/bootstrap.js")}}"></script>
+    <script src="{{static_url("js/plugins/metisMenu/jquery.metisMenu.js")}}"></script>
+    <script src="{{static_url("js/plugins/slimscroll/jquery.slimscroll.min.js")}}"></script>
+    <script src="{{static_url("js/vue.js")}}"></script>
+    <script src=" {{static_url("js/bootstrap-datetimepicker.min.js")}} "></script>
+    <script src=" {{static_url("js/locales/bootstrap-datetimepicker.zh-CN.js")}} "></script>
+    <script src=" {{static_url("js/plugins/toastr/toastr.min.js")}} "></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="{{static_url("js/inspinia.js")}}"></script>
+    <script src="{{static_url("js/plugins/pace/pace.min.js")}}"></script>
+
+    <!-- Peity -->
+    <script src="{{static_url("js/plugins/peity/jquery.peity.min.js")}}"></script>
+
+    <!-- Peity -->
+    <script src="{{static_url("js/demo/peity-demo.js")}}"></script>
+
+    <script src="{{static_url("js/dropzone.js")}}"></script>
+    <script src=" {{static_url("js/util.js")}} "></script>
+    <script src="{{static_url("js/com.js")}}"></script>
+    <script src="{{static_url("js/m2.js")}}"></script>
+
+
+    <!-- blueimp gallery -->
+    <!--script src="{{static_url("js/plugins/blueimp/jquery.blueimp-gallery.min.js")}}"></script -->
+
+
+</html>

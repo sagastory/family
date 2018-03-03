@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<!-- jquery.touch v1.0.0 | (c) @ajlkn | github.com/ajlkn/jquery.touch | MIT licensed -->
+<html>
+	<head>
+		<title>jQuery touch.js Demo</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=false" />
+		<link rel="stylesheet" href="common.css" />
+        <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>-->
+		<script src="../jquery.touch.js"></script>
+		<style>
+
+			#pad {
+				background-color: rgba(0,0,0,0.025);
+				border-radius: 1.5rem;
+				border: solid 1px rgba(0,0,0,0.25);
+				font-size: 2rem;
+				height: 18rem;
+				margin: 0 auto 2rem auto;
+				max-height: 45vh;
+				max-width: 100%;
+				width: 35rem;
+			}
+
+			#name {
+				font-size: 2rem;
+				margin: 0 0 0.75rem 0;
+			}
+
+		</style>
+		<script>
+
+			$(function() {
+
+				// Vars.
+					var	$pad = $('#pad'),
+						$status = $('#status'),
+						$name = $('#name'),
+						_name = function(s) { $name.text(s); },
+						_status = function(s) { $status.text(s); };
+
+				// Bind events.
+					$pad
+						.touch({
+
+							// Turn on document tracking so stuff works even if the cursor leaves the trackpad.
+								trackDocument: true,
+
+							// Normalize coordinates when/if the cursor leaves the trackpad.
+								trackDocumentNormalize: true,
+
+							// Prevent default events for drag/swipe (so the page doesn't scroll when you do those gestures).
+								preventDefault: {
+									drag: true,
+									swipe: true
+								}
+
+						})
+
+						// Tap events.
+							.on('tap',				function(e, o) { _name('tap'); _status('Pos: ' + Math.round(o.ex) + ', ' + Math.round(o.ey)); })
+							.on('doubleTap',		function(e, o) { _name('doubleTap'); _status('Pos: ' + Math.round(o.ex) + ', ' + Math.round(o.ey)); })
+							.on('tapAndHold',		function(e, o) { _name('tapAndHold'); _status('Pos: ' + Math.round(o.ex) + ', ' + Math.round(o.ey)); })
+
+						// Drag events.
+							//.on('dragStart',		function(e, o) { _name('dragStart'); _status('Pos: ' + o.ex + ', ' + o.ey); })
+							//.on('drag',			function(e, o) { _name('drag'); _status('Pos: ' + o.ex + ', ' + o.ey); })
+							//.on('dragEnd',		function(e, o) { _name('dragEnd'); _status('S: ' + o.start.ex + ', ' + o.start.ey + ', E: ' + o.end.ex + ', ' + o.end.ey + ', Dist: ' + Math.round(o.distance) + ', Dur: ' + o.duration + ', V: ' + Math.round(o.velocity)); })
+
+						// Swipe event.
+							//.on('swipe',			function(e, o) { _name('swipe'); _status('Dist: ' + o.distance + ', Dur: ' + o.duration + ', V: ' + Math.round(o.velocity)); })
+
+						// Swipe events.
+							.on('swipeUp',			function(e, o) { _name('swipeUp'); _status('Dist: ' + Math.round(o.distance) + ', Dur: ' + o.duration + ', V: ' + Math.round(o.velocity)); })
+							.on('swipeDown',		function(e, o) { _name('swipeDown'); _status('Dist: ' + Math.round(o.distance) + ', Dur: ' + o.duration + ', V: ' + Math.round(o.velocity)); })
+							.on('swipeLeft',		function(e, o) { _name('swipeLeft'); _status('Dist: ' + Math.round(o.distance) + ', Dur: ' + o.duration + ', V: ' + Math.round(o.velocity)); })
+							.on('swipeRight',		function(e, o) { _name('swipeRight'); _status('Dist: ' + Math.round(o.distance) + ', Dur: ' + o.duration + ', V: ' + Math.round(o.velocity)); });
+
+			});
+
+		</script>
+	</head>
+	<body>
+<div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="http://www.jqueryscript.net/mobile/jQuery-Plugin-For-Touch-Drag-Events-touch-js.html">Download This Plugin</a></li>
+<li><a href="http://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+		<h1 style="margin-top:150px;">jQuery touch.js Demo</h1>
+		<div id="pad"></div>
+		<div id="name">...</div>
+		<div id="status">...</div>
+
+	</body>
+</html>

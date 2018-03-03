@@ -1,0 +1,77 @@
+#!/usr/bin/env Python
+# coding=utf-8
+
+import tornado.web
+from basehandler import BaseHandler
+import os
+import tornado.escape as es
+import MySQLdb
+
+static_pic_path="/home/naba/git-pro/netfamily/statics/pic/upload"
+
+class IndexHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        userid = self.get_secure_cookie("userid")
+
+        conn = MySQLdb.connect(host="localhost", user="root", passwd="jbgsn", db="family", port=3306, charset="utf8")    #连接对象
+        cur = conn.cursor()    #游标对象
+        sql = "select b.fid,c.fname,c.ftxt from persons a, FP b, familys c where a.upid='"+userid+"' and a.pid = b.pid and c.fid=b.fid"
+        cur.execute(sql)
+
+        lines = cur.fetchall()
+        print lines
+
+        persondict={}
+        for line in lines:
+            sql="select a.pid,a.pphoto from persons a, FP b where a.pid=b.pid and b.fid='"+line[0]+"'"
+            cur.execute(sql)
+
+            persondict[line[0]]=cur.fetchall()       
+
+        cur.close()
+        conn.close()
+                
+        self.render("index.html",user=self.current_user,familys=lines,persons=persondict)
+
+    #@tornado.web.authenticated
+    def post(self):
+        cmd = self.get_argument("cmd")
+        tmpf = self.get_argument("tmpf")
+        
+        #print(family)
+        #password = self.get_argument("password")
+        #user_infos = mrd.select_table(table="users",column="*",condition="uname",value=username)
+        picpath = os.path.join(static_pic_path,tmpf)
+        piclist = os.listdir(picpath)
+
+        returndic={}
+        dirlist=[]
+        for pic in piclist:
+            pic='static/pic/upload/'+tmpf+'/'+pic
+            dirlist.append(pic)
+
+        returndic['pic']=dirlist
+        if (cmd=="create"):
+            #self.set_header("Content-Type", "application/json; charset=UTF-8")
+            self.write(es.json_encode(dirlist)) 
+        elif(cmd=="Add"):
+            family = self.get_argument("family")
+
+            conn = MySQLdb.connect(host="localhost", user="root", passwd="jbgsn", db="family", port=3306, charset="utf8")    #连接对象
+            cur = conn.cursor()    #游标对象
+
+            sql = "select a.pid, a.pphoto,b.relationship from persons a, FP b where a.pid=b.pid and b.fid='"+family+"'"
+            cur.execute(sql)
+
+            lines=cur.fetchall()
+
+            returndic['member'] = lines
+
+            print returndic
+            
+            self.write(es.json_encode(returndic))
+
+        else:
+            #self.write("There is no thi user.")
+            raise tornado.web.HTTPError(404)

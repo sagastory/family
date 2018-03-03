@@ -1,0 +1,21 @@
+<div id="mesgPic">
+                    <el-upload
+                        class="avatar-uploader"
+                        ref="upload"
+                        :data="mesid"
+                        action="/writemsg"
+                        list-type="picture-card"
+                        limit=6
+                        :auto-upload="true"
+                        :before-upload="beforeAvatarUpload"
+                        :on-success="handleUploadSuccess"
+                        :on-error="handleError">
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                
+                    <br />
+
+                    <textarea class="form-control" placeholder="..." id="msg"></textarea>
+
+                    <span class="pull-right" style="position: relative;top:-45px;left:-10px" @click="submitUpload"><i class="fa fa-paper-plane-o fa-2x"></i></span>
+                </div>

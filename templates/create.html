@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Our Family</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="{{static_url("js/vue.js")}}"></script>
+
+    <!-- 引入elment样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入element组件库 -->
+    <script src="//unpkg.com/element-ui@2.0.10/lib/index.js"></script>
+    
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="{{static_url("css/m.css")}}">
+
+ 
+</head>
+<body>
+<div id="app" v-if="one">
+    <el-container>
+        <el-header>
+            <p>上传一张全家福，创建一个家谱!</p>
+        </el-header>
+        <el-main>
+            <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :on-error="handleError"
+                :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </el-main>
+       
+    </el-container>
+</div>
+<div id="app2" v-if="two">
+    <pic-list :layer="grandlay"></pic-list>
+    <pic-list :layer="fatherlay"></pic-list>
+</div>
+
+<!-- 引入js -->
+<script src="{{static_url("js/m.js")}}"></script>
+
+</body>

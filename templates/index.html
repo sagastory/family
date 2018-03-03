@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Our Family</title>
+        <script src="{{static_url("js/vue.js")}}"></script>
+        <script src="{{static_url("dist/vis.min.js")}}"></script>
+        <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+
+        <!-- 引入样式 bootstrap-datetimepicker.min -->
+        <link rel="stylesheet" href="{{static_url("css/m.css")}}">
+        <link rel="stylesheet" href="{{static_url("css/dropzone.min.css")}}">
+
+        <link href="{{static_url("dist/vis.css")}}" rel="stylesheet">
+
+        <link href='https://fonts.cat.net/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+        <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    </head>
+
+
+    <body>
+        <div id="app" v-cloak>
+            <v-app id="inspire">
+                <v-container fluid grid-list-lg>
+                    <v-layout row wrap>
+                        <v-flex xs12 sm12 md12>
+                            <v-card>
+                                <v-toolbar fixed dark color="primary">
+                                    <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+                                    <v-toolbar-title>{{current_user}}</v-toolbar-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn icon @click.stop="showthis()">
+                                        <v-icon>add</v-icon>
+                                    </v-btn>
+                                    <v-btn icon>
+                                        <v-icon>message</v-icon>
+                                    </v-btn>
+                                    <v-btn icon onclick="window.location.href = '/logout'">
+                                        <v-icon>account_circle</v-icon>
+                                    </v-btn>
+                                    {% if len(familys)!=0 %}
+                                    <v-tabs centered color="primary" slot="extension" slider-color="yellow" v-model="tab">
+                                        <v-tab href="#tab-1" onclick="showrela()">
+                                            家族关系
+                                        </v-tab>
+                                        <v-tab href="#tab-2">
+                                            家族动态
+                                        </v-tab>
+                                        <v-tab href="#tab-3">
+                                            我的家庭
+                                        </v-tab>
+                                    </v-tabs>
+                                    {% end %}
+                                </v-toolbar>
+
+
+                                <v-card-text style="height: 100%; position: relative; margin-top:120px">
+
+
+                                    {% if len(familys)!=0 %}
+
+                                    <v-tabs-items v-model="tab">
+                                        <v-tab-item id="tab-1">
+                                            <v-card id="family-rela" style="height: 400px">
+
+                                            </v-card>
+                                        </v-tab-item>
+                                        <v-tab-item id="tab-2">
+                                            <v-card flat v-for="message in mesgs">
+                                                <v-layout wrap>
+                                                    <v-flex xs2 sm1 md1>
+                                                        <v-avatar size="40px" slot="activator">
+                                                            <img :src="'/static/pic/'+message[0][1]+'/'+message[0][6]">
+                                                        </v-avatar>
+                                                    </v-flex>
+                                                    <v-flex xs10 sm10 md11>
+                                                        <div>
+                                                            <span class="headline teal-text">${message[0][5]}</span>
+                                                        </div>
+                                                        <div class="body-2">${message[0][3]}</div>
+                                                        <v-container fluid grid-list-xs>
+                                                            <v-layout row wrap>
+                                                                <v-flex xs6 v-for="(pic,index) in message[1]" :key="index">
+                                                                    <v-card flat tile>
+                                                                        <v-card-media :src="'/static/pic/'+message[0][1]+'/ablum/'+pic[1]" height="150px">
+                                                                        </v-card-media>
+                                                                    </v-card>
+                                                                </v-flex>
+                                                            </v-layout>
+                                                            <v-layout row wrap>
+                                                                <v-flex xs10 justify-start>
+                                                                    <span class="grey--text caption">${message[0][4]}</span>
+                                                                </v-flex>
+                                                                <v-flex xs2 class="grey--text">
+                                                                    <v-icon>comment</v-icon>
+                                                                </v-flex>
+                                                            </v-layout>
+                                                            <v-layout row wrap>
+                                                                <v-flex xs11 justify-start v-for="comment in message[2]" class="grey">
+                                                                    <span class="blue--text">${comment[4]}:</span>
+                                                                    <span>${comment[2]}</span>
+                                                                </v-flex>
+                                                            </v-layout>
+                                                        </v-container>
+                                                    </v-flex>
+                                                </v-layout>
+                                                
+                                            </v-card>
+                                        </v-tab-item>
+                                        <v-tab-item id="tab-3">
+
+
+                                            <v-radio-group v-model="radios">
+                                                {% for family in familys %}
+                                                <div onclick="window.location.href=('/family/{{family[0]}}')">
+                                                    <v-layout row wrap align-center>
+                                                        <v-flex xs8 md10>
+                                                            <v-icon large color="orange darken-2">home</v-icon>
+                                                            <span class="title">{{family[1]}}</span>
+                                                        </v-flex>
+                                                        <v-flex xs4 md2 align-content-end align-end>
+                                                            <v-radio label="主" value="{{family[0]}}"></v-radio>
+                                                        </v-flex>
+                                                    </v-layout>
+
+                                                    <v-layout>
+                                                        <v-flex xs12>
+
+                                                            {%for person in persons[family[0]] %}
+                                                            <v-avatar size="40px" slot="activator">
+                                                                <img src="{{static_url('pic/'+family[0]+'/'+person[1])}}">
+                                                            </v-avatar>
+                                                            {% end %}
+                                                        </v-flex>
+                                                    </v-layout>
+                                                </div>
+                                                {% end %}
+                                            </v-radio-group>
+
+                                        </v-tab-item>
+                                    </v-tabs-items>
+
+
+
+                                    {% else %}
+                                    <div class="middle-box text-center">
+
+                                        <div class="title">
+                                            上传一张家庭合照
+                                            <br />
+                                            <br /> 开启网上家谱!
+                                        </div>
+
+                                        <div style="margin-top:150px;">
+
+                                            <v-btn large color="primary" @click.stop="showthis()">
+                                                <v-icon>add</v-icon>&nbsp;开始创建
+                                            </v-btn>
+                                        </div>
+
+                                    </div>
+
+                                    {%end%}
+                                </v-card-text>
+
+                            </v-card>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+
+                <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition" :overlay="false" scrollable>
+                    <v-card title>
+                        <v-toolbar card dark color="primary">
+                            <v-btn icon @click.native="dialog = false" dark>
+                                <v-icon>close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>创建家庭</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                            <v-toolbar-items>
+                                <v-btn :disabled="!stepone" dark flat @click.native="showdialog2()">下一步</v-btn>
+                            </v-toolbar-items>
+                        </v-toolbar>
+                        <div class="middle-box text-center" style="margin-top:150px;">
+                            <div class="fallback" id="addmember"></div>
+                            <v-btn large color="primary" class="fileinput-button">
+                                <v-icon>backup</v-icon>&nbsp;上传合照
+                            </v-btn>
+                        </div>
+
+                    </v-card>
+                </v-dialog>
+
+                <v-dialog v-model="dialog3" persistent max-width="500px">
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">添加成员</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                            <v-container grid-list-md>
+                                <v-layout wrap>
+                                    <v-flex xs12 sm12 md6>
+                                        <v-text-field :autofocus="1===1" label="请输入成员关系" required v-model="membername"></v-text-field>
+                                    </v-flex>
+
+                                </v-layout>
+                            </v-container>
+
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="dialog3 = false">取消</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="addmember()">确定</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
+                <v-dialog v-model="dialog4" persistent max-width="500px">
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">填写基本信息</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                            <v-container grid-list-md>
+                                <form id="memberinfo">
+                                    <v-layout wrap>
+                                        <v-flex xs12 sm12 md6>
+                                            <v-text-field :autofocus="1===1" label="输入家庭名称" required name="fname"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 sm12 md6>
+                                            <v-text-field label="家庭宣言" name="ftxt"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 sm12 md6>
+                                            <v-text-field label="结婚纪念日" name="fdate"></v-text-field>
+                                        </v-flex>
+                                        <input type="text" class="hidden" id="createfid" name="fid" :value="fid">
+                                        <input type="text" class="hidden" id="createfphoto" name="fphoto" :value="fphoto">
+                                        <hr />
+                                        <v-layout wrap v-for="(value, index) in memberlist" :key="index">
+                                            <v-flex xs2 sm2 md1>
+                                                <v-avatar size="36px" slot="activator">
+                                                    <img :src="value[2]">
+                                                </v-avatar>
+
+                                            </v-flex>
+                                            <v-flex xs10 sm10 md11>
+                                                <v-layout wrap>
+                                                    <v-flex xs12 sm6 md6>
+                                                        <v-text-field label="TA的名字!" name="pname" :value="value[3]"></v-text-field>
+                                                    </v-flex>
+                                                    <v-flex xs12 sm6 md6>
+                                                        <v-dialog ref="menu" lazy persistent :close-on-content-click="false" v-model="menus[index]" lazy full-width width="290px"
+                                                            :return-value.sync="dates[index]">
+                                                            <v-text-field slot="activator" label="TA的生日!" name="pbirthday" v-model="dates[index]" prepend-icon="event" readonly></v-text-field>
+                                                            <v-date-picker v-model="dates[index]" scrollable>
+                                                                <v-spacer></v-spacer>
+                                                                <v-btn flat color="primary" @click="menus[index] = false">Cancel</v-btn>
+                                                                <v-btn flat color="primary" @click="save(index,dates[index])">OK</v-btn>
+                                                            </v-date-picker>
+                                                        </v-dialog>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </v-flex>
+
+
+
+
+                                            <input type="text" class="hidden" :value="value[1]" name="relationship">
+                                            <input type="text" class="hidden" :value="value[2]" name="photo">
+                                            <input type="text" class="hidden" :value="value[0]" name="pid">
+                                        </v-layout>
+
+                                    </v-layout>
+                                </form>
+                            </v-container>
+
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" flat @click.native="dialog4 = false">取消</v-btn>
+                            <v-btn color="blue darken-1" flat @click.native="createfinish">确定</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
+                <v-dialog v-model="dialog2" fullscreen transition="dialog-bottom-transition" :overlay="false" scrollable>
+                    <v-card title>
+                        <v-toolbar card dark color="primary">
+                            <v-toolbar-title>选择角色</v-toolbar-title>
+                            <v-spacer></v-spacer>
+                            <v-toolbar-items>
+                                <v-btn :disabled="!steptwo" dark flat @click.native="dialog2 = false;dialog4=true">下一步</v-btn>
+                            </v-toolbar-items>
+                        </v-toolbar>
+                        <v-layout wrap justify-space-around align-center>
+
+                            <ul class="team-members list-inline">
+                                <li v-for="(value,index) in member" :key="index">
+                                    <image src="/static/pic/person.jpg" class="img-circle" droptarget="yes" :pid="value[0]" :id="index" :name="value[1]" :pname="value[3]"
+                                        :birthday="value[4]">
+                                    </image>
+                                    <div class="text-center">${value[1]}</div>
+                                </li>
+                                <v-fab-transition>
+                                    <v-btn color="blue" dark absolute right fab @click.stop="membername='';dialog3=true">
+                                        <v-icon>add</v-icon>
+                                    </v-btn>
+                                </v-fab-transition>
+                            </ul>
+
+
+
+                        </v-layout>
+                        <div class="text-center">
+                            <span>按住头像，向上拖动到相应角色</span>
+                        </div>
+                        <v-layout wrap justify-space-around align-center>
+
+                            <ul class="team-members list-inline">
+                                <li v-for="img in piclist" class="orderable">
+                                    <image :src="img" class="img-circle dragable" :id="img"></image>
+                                </li>
+                            </ul>
+                        </v-layout>
+
+                    </v-card>
+                </v-dialog>
+
+                <v-navigation-drawer temporary v-model="drawer" absolute>
+                    <v-list class="pa-1">
+                        <v-list-tile avatar>
+                            <v-list-tile-avatar>
+                                <img src="https://randomuser.me/api/portraits/men/85.jpg">
+                            </v-list-tile-avatar>
+                            <v-list-tile-content>
+                                <v-list-tile-title>John Leider</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
+                    <v-list class="pt-0" dense>
+                        <v-divider></v-divider>
+                        <v-list-tile v-for="item in items" :key="item.title" @click="">
+                            <v-list-tile-action>
+                                <v-icon>${ item.icon }</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>${ item.title }</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
+                </v-navigation-drawer>
+
+
+                <v-snackbar :timeout="timeout" :bottom="1===1" :multi-line="1===1" v-model="snackbar" :color="color">
+                    ${ infotext }
+                    <v-btn flat color="pink" @click.native="snackbar = false">Close</v-btn>
+                </v-snackbar>
+                <div class="black_overlay text-center">
+                    <v-progress-circular indeterminate :size="50" color="primary"></v-progress-circular>
+                    <div class="white--text">处理中,请稍候...</div>
+                </div>
+            </v-app>
+        </div>
+
+
+
+    </body>
+    <!-- 引入js -->
+
+    <!-- Mainly scripts bootstrap-datetimepicker.zh-CN-->
+    <script src=" {{static_url("js/jquery-2.1.1.js")}} "></script>
+    <script src="{{static_url("js/exif.js")}}"></script>
+    <script src=" {{static_url("js/dropzone.js")}} "></script>
+    <script src=" {{static_url("js/jquery.touch.min.js")}} "></script>
+    <script src="{{static_url("js/index.js")}}"></script>
+
+
+</html>

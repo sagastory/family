@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Our Family</title>
+
+        <link href="{{static_url("css/bootstrap.min.css")}}" rel="stylesheet">
+        <link href="{{static_url("font-awesome/css/font-awesome.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/animate.css")}}" rel="stylesheet">
+        <link href="{{static_url("css/style.css")}}" rel="stylesheet">
+
+        <!-- Mainly scripts -->
+        <script src=" {{static_url("js/jquery-2.1.1.js")}} "></script>
+        <script src=" {{static_url("js/bootstrap.js")}} "></script>
+        <script src=" {{static_url("js/util.js")}} "></script>
+        <script src=" {{static_url("js/m3.js")}} "></script>
+        <script src=" {{static_url("js/jquery.touch.min.js")}} "></script>
+
+    </head>
+
+    <body class="gray-bg" style="padding-top:50px">
+        <nav class="navbar navbar-fixed-top white-bg" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    <i class="fa fa-reply fa-lg"></i>&nbsp; Me+</a>
+                </a>
+
+            </div>
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <span class="m-r-sm text-muted welcome-message">欢迎您{{current_user}}.</span>
+                </li>
+
+
+                <li>
+                    <a class="dropdown-toggle count-info" href="#">
+                        <i class="fa fa-envelope"></i>
+                        <span class="label label-warning">16</span>
+                    </a>
+
+                </li>
+
+
+                <li>
+                    <a href="/logout">
+                        <i class="fa fa-sign-out"></i>
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="contact-box">
+
+                        <div class="col-sm-4" id="dragtest">
+                            <img alt="image" id="yes" class="img-circle m-t-xs img-responsive" style="max-width: 80px" src="{{static_url('pic/'+person[0]+'/'+person[3])}}">
+
+                        </div>
+                        <div class="col-sm-8">
+                            {%if person[1]%} {% if str(currentuser[0]) == str(person[1]) %}
+                            <i class="fa fa-pencil-square-o fa-2x pull-right"></i>
+                            {%else %}
+                            <i class="fa fa-comments-o fa-2x pull-right"></i>
+                            {%end%} {%else%}
+                            <a type="button" data-toggle="modal" data-target="#invode">
+                                <span class="pull-right">邀请注册</span>
+                            </a>
+                            {%end%}
+                            <h3>
+                                <strong>{{person[5]}}&nbsp;</strong>{%if person[1] %}
+                                <small>(已注册)</small>{%else%}
+                                <small>(未注册)</small>{%end%}
+                            </h3>
+                            <p>
+                                <i class="fa fa-map-marker"></i> 中国.上海</p>
+                            <address>
+                                <strong>{{person[6]}}.{{person[2] if person[2]!='我' else '创建者'}}</strong>
+
+                                <br> {{person[4]}}
+                                <br>
+                                <abbr title="Phone"></abbr> (086) 138xxxx8763
+                            </address>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+                <div class="col-lg-8">
+
+                    <a href= {{'/family/'+family[0]}}>
+                        <div class="ibox-title">
+                            {%if int(currentuser[0]) not in family[2][0]%}
+                            <h2 class="label label-primary pull-right">申请加入</h2>
+                            {%end%}
+                            <h2>{{person[6]}}</h2>
+                            <small>创建于: {{person[7]}}</small>
+                        </div>
+                    </a>
+                    <div class="ibox-content">
+
+                        <div class="team-members">
+                            {% for member in family[1] %}
+                            <a href="{{'/person/'+member[0]}}">
+                                <img alt="member" class="img-circle" src="{{static_url('pic/'+family[0]+'/'+member[2])}}">
+                            </a>
+
+                            {%end%}
+                        </div>
+                        <span>成员完整度:</span>
+                        <div class="stat-percent">{{person[8]}}%</div>
+                        <div class="progress progress-mini">
+                            <div style="{{'width: '+str(person[8])+'%;'}}" class="progress-bar"></div>
+                        </div>
+
+                    </div>
+                    <br />
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal inmodal" id="invode" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <i class="fa fa-group modal-icon"></i>
+                        <br />
+                        <h4 class="modal-title">邀请
+                            <span style="color:rgb(53, 53, 230)">{{person[5]}}</span>注册!</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <strong>请填写{{person[5]}}的手机号码，系统将自动发送如下短信给到{{person[5]}}!</strong>
+                            <br />
+                            <p class="bg-info">{{person[5]}},您好，您的家人{{currentuser[2]}}邀请您注册网上家园，成为一家人，一起愉快的玩耍！ 注册地址 https://www.wojia.com/ 等您哦！</p>
+
+                        </div>
+                        <br />
+                        <form class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">{{person[5]}}的手机号码</label>
+
+                                <div class="col-lg-10">
+                                    <input type="text" placeholder="" class="form-control" id="mobile">
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-lg-offset-2 col-lg-10">
+                                    <button class="btn btn-sm btn-white" onclick="sendinvote(event,'{{person[0]}}','{{person[9]}}','{{currentuser[1]}}','{{currentuser[2]}}')">确认发送</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+    <!-- 引入js -->
+    <script>
+        $(function () {
+            console.log("begin...");
+            var $document = $(document),
+                $wrapper = $('#dragtest'),
+                $placeholder = $('<div class="placeholder"></div>'),
+                isDragging = false,
+                hasDropTarget = false,
+                isMobile = (navigator.userAgent.match(/(like Mac OS X|Android|Windows Phone)/) !== null);
+
+            // Bind events.
+            $wrapper
+                .touch({
+
+                    // Turn on document tracking for smoother dragging.
+                    trackDocument: true,
+
+                    // Set drag threshold to zero for maximum drag sensitivity.
+                    dragThreshold: 0,
+
+                    // Set drag delay to zero for fastest drag response.
+                    dragDelay: 0,
+
+                    // Turn on drop filter (true = limit to siblings of item being dragged).
+                    dropFilter: false,
+
+                    // Delegate touch events to items.
+                    delegateSelector: '.img-circle',
+
+                    // Lower tap and hold delay.
+                    tapAndHoldDelay: 250,
+
+                    useMouse: true,
+
+                    // Prevent default events for drag events. Ordinarily this takes a boolean value, but in the case
+                    // of this demo we're doing the following to prevent:
+                    //
+                    // - If we're *not* on a mobile device, always prevent default drag events.
+                    // - If we *are* on a mobile device, only prevent default drag events when we're in a "tap and hold" gesture.
+                    preventDefault: {
+                        drag: true,
+                        swipe: true
+                    }
+
+                })
+                .on('tap', function (e, o) {
+                    // _name('tap');
+                    //_status('Pos: ' + Math.round(o.ex) + ', ' + Math.round(o.ey));
+                    console.log('tap');
+                    console.log(o);
+                    console.log(o.event.target.id);
+                })
+                .on('tapAndHold', function (e, o) {
+                    // _name('tapAndHold');
+                    //_status('Pos: ' + Math.round(o.ex) + ', ' + Math.round(o.ey));
+                    console.log('tapAndHold');
+                    console.log(o);
+                    // Stop propagation.
+                    e.stopPropagation();
+
+                    // Vars.
+                    var $this = $(this),
+                        scrollLeft = $document.scrollLeft(),
+                        scrollTop = $document.scrollTop();
+
+                    $placeholder
+                        .css('width', $this.outerWidth() + 'px')
+                        .css('height', $this.outerHeight() + 'px');
+
+                    $this
+                        .css('width', $this.outerWidth())
+                        .css('height', $this.outerHeight())
+                        .addClass('is-dragging')
+                        .css('position', 'fixed')
+                        .css('top', (o.y - o.event.target.offsetHeight/2) + 'px')
+                        .css('left', (o.x - o.event.target.offsetWeight/2) + 'px');
+
+                    $placeholder
+                        .insertBefore($this);
+                })
+                .on('swipe', function (e, o) {
+
+                    console.log('swipe');
+                    console.log(o);
+                    var $this = $(this);
+                    $this
+                        .css('top', (o.y - e.target.offsetHeight) + 'px')
+                        .css('left', (o.x - e.target.offsetWeight) + 'px');
+
+                })
+                .on('drag', function (e, o) {
+
+                    console.log('drag');
+                    console.log(o);
+                    var $this = $(this),
+                        scrollTop = $document.scrollTop(),
+                        scrollLeft = $document.scrollLeft();
+                    $this
+                        .css('top', (o.y  - e.target.offsetHeight) + 'px')
+                        .css('left', (o.x  - e.target.offsetHeight) + 'px');
+
+                })
+        });
+    </script>
+
+</html>

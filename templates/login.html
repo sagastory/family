@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>网+ | Login</title>
+
+    <link href="{{static_url("css/bootstrap.min.css")}}" rel="stylesheet">
+    <link href="{{static_url("font-awesome/css/font-awesome.css")}}" rel="stylesheet">
+
+    <link href="{{static_url("css/animate.css")}}" rel="stylesheet">
+    <link href="{{static_url("css/style.css")}}" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="middle-box text-center loginscreen animated fadeInDown" id="login">
+        <div>
+            <div>
+
+                <h1 class="logo-name">Me+</h1>
+
+            </div>
+            <h3>welcome to me+.
+            </h3>
+            <p>时光渐渐远去，我们留住记忆!</p>
+            <form class="m-t" role="form" method="post" action="/login">
+                <div class="form-group">
+                    <input type="text" class="hidden" value="login" name="type">
+                    <input type="text" class="form-control" placeholder="Username" required="" name="name">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" required="" name="passwd">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+
+                <a href="login.html#"><small>Forgot password?</small></a>
+                <p class="text-muted text-center"><small>Do not have an account?</small></p>
+                <button class="btn btn-sm btn-white btn-block"  onclick="regist()">Create an account</button>
+            </form>
+            
+        </div>
+    </div>
+
+    <div class="middle-box text-center loginscreen   animated fadeInDown" id="register" style="display:none">
+        <div>
+            <div>
+
+                <h1 class="logo-name">Me+</h1>
+
+            </div>
+            <h3>Register to Me+</h3>
+            <p>时光渐渐远去，我们留住记忆!</p>
+            <form class="m-t" role="form" method="post" action="/register">
+                <div class="form-group">
+                    <input type="text" class="hidden" value="register" name="type">
+                    <input type="text" class="form-control" placeholder="Name" required="" name="name">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Email" required="" name="email">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" required="" name="passwd">
+                </div>
+                <div class="form-group">
+                        <div class="checkbox i-checks"><label> <input type="checkbox"><i></i> Agree the terms and policy </label></div>
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Register</button>
+
+                <p class="text-muted text-center"><small>Already have an account?</small></p>
+                <button class="btn btn-sm btn-white btn-block" onclick="regist()">Login</button>
+            </form>
+           
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="{{static_url("js/jquery-2.1.1.js")}}"></script>
+    <script src="{{static_url("js/bootstrap.min.js")}}"></script>
+    <script>
+        function regist(){
+            $('#login').toggle();
+            $('#register').toggle();
+        }
+    </script>
+
+</body>
+
+</html>
